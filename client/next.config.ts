@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "m.media-amazon.com",
+        hostname: "*",
         protocol: "https",
         pathname: "/**",
         port: "",

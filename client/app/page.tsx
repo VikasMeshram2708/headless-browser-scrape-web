@@ -1,66 +1,44 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DollarSign, Link } from "lucide-react";
-import Image from "next/image";
+import PropertyCard from "@/components/listings/property-card";
+import { Suspense } from "react";
 
-type Property = {
+export type Listing = {
   title: string;
   price: string;
   rating: string;
   imageUrl: string;
-  productLink: string;
+  listingLink: string;
 };
 
+export const revalidate = 60;
+
 export default async function Home() {
-  const res = await fetch("http://localhost:5000", {
-    cache: "force-cache",
-  });
-  const data: Promise<{ products: Property[] }> = await res.json();
-  const products = (await data).products;
+  const res = await fetch(
+    `http://localhost:5000/listings?take=${10}&skip=${10}`
+  );
+  const propertyData: {
+    meta: { total: number; totalListed: number; data: Listing[] };
+  } = await res.json();
+  // const data: { listings: Listing[] } = await res.json();
+
+  // console.log("pd", propertyData.listings);
+
+  if (!propertyData.meta.data) {
+    return (
+      <main className="min-h-screen w-full">
+        <h1 className="text-center text-xl font-bold">No listed properties</h1>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen w-full">
       <div className="container mx-auto">
-        {/* <pre>{JSON.stringify(data)}</pre> */}
-        <ul className="grid grid-cols-2 mg:grid-col-3 lg:grid-cols-4 gap-4">
-          {products &&
-            products.map((item, idx) => (
-              <Card key={idx}>
-                <CardHeader>
-                  <CardTitle className="text-lg capitalize line-clamp-1">
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-video relative">
-                    <Image
-                      src={item.imageUrl || ""}
-                      alt={item.title}
-                      priority
-                      sizes="100vw"
-                      layout="fill"
-                    />
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <Button>
-                    <DollarSign />
-                    {item.price}
-                  </Button>
-                  <Button variant={"outline"}>
-                    <Link />
-                    Direct Link
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-        </ul>
+        {/* <pre>{JSON.stringify(propertyData.meta.data, null, 2)}</pre> */}
+        <div className="py-10">
+          <Suspense fallback={<p>Processing...</p>}>
+            <PropertyCard listings={propertyData.meta.data} />
+          </Suspense>
+        </div>
       </div>
     </main>
   );

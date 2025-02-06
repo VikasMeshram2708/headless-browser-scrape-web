@@ -1,7 +1,16 @@
 import express, { Request, Response } from "express";
 import puppeteer from "puppeteer";
+import cors from "cors";
+import prisma from "./lib/prisma";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    methods: ["GET", "POST"],
+  })
+);
 const PORT = process.env.PORT || 5000;
 
 app.get("/", async (req: Request, res: Response) => {
@@ -43,7 +52,7 @@ app.get("/", async (req: Request, res: Response) => {
 
         // Extract the numerical price using a regular expression
         const priceMatch = priceText.match(/(\d[\d,]*)/);
-        const price = priceMatch ? priceMatch[0].replace(/,/g, '') : "N/A";
+        const price = priceMatch ? priceMatch[0].replace(/,/g, "") : "N/A";
 
         // Extract the numerical rating using a regular expression
         const ratingMatch = ratingText.match(/(\d+\.\d+)/);
@@ -63,7 +72,7 @@ app.get("/", async (req: Request, res: Response) => {
     });
 
     res.header("Content-Type", "application/json");
-    
+
     res.json({ listings });
   } catch (error) {
     console.error("Scraping error:", error);
@@ -73,6 +82,47 @@ app.get("/", async (req: Request, res: Response) => {
     });
   } finally {
     if (browser) await browser.close();
+  }
+});
+
+// @ts-ignore
+app.get("/listings", async (req: Request, res: Response) => {
+  try {
+    const queryParams = req.query;
+
+    // console.log("qp", queryParams);
+
+    // @ts-ignore
+    const propertyCount: { take: string; skip: string } =
+      await prisma.property.count();
+
+    const take = Number(queryParams.take) || 10;
+    let skip;
+    if (Number(queryParams.skip) > Number(propertyCount)) {
+      skip = Number(queryParams.skip) || 10;
+    } else {
+      skip = propertyCount.skip || 10;
+    }
+
+    const data = await prisma.property.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: take,
+      skip: Number(skip),
+    });
+
+    const meta = {
+      data,
+      total: propertyCount,
+      totalListed: take,
+    };
+    return res.json({ meta });
+  } catch (error) {
+    console.log(`Something went wrong. Listing fetching error : ${error}`);
+    return res.status(500).json({
+      error: "Something went wrong. Please try again.",
+    });
   }
 });
 

@@ -8,8 +8,6 @@
 
   - Price comparison and trend analysis.
 
-  - Sentiment analysis of customer reviews.
-
   - Notifications for changes in competitor strategies.
 
 - Potential: Helps businesses stay ahead of the competition.

@@ -11,6 +11,7 @@ type Listing = {
 async function seed() {
   try {
     const res = await fetch("http://localhost:5000");
+
     if (!res.ok) {
       throw new Error(`Failed to fetch listings: ${res.statusText}`);
     }
@@ -20,7 +21,6 @@ async function seed() {
     if (listingsData && listingsData.listings) {
       await prisma.property.createMany({
         data: listingsData.listings,
-        skipDuplicates: true, // Optional: Skip duplicates
       });
       console.log("Seed completed successfully!");
     }
