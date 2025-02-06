@@ -1,5 +1,18 @@
-# Headless Browser for web scraping
+# Competitor Analysis Tool for Businesses
 
-- Author :- Vikas Meshram 
-- Email :- [meshramvikas108@gmail.com]
-- LinkedIn :- [https://www.linkedin.com/in/vikas-meshram]
+- Scrape competitor websites to collect data on pricing, product offerings, and marketing strategies. Provide insights for businesses to stay competitive.
+
+- Features:
+
+  - Real-time competitor tracking.
+
+  - Price comparison and trend analysis.
+
+  - Sentiment analysis of customer reviews.
+
+  - Notifications for changes in competitor strategies.
+
+- Potential: Helps businesses stay ahead of the competition.
+
+* Author :- Vikas Meshram
+* Portfolio :- [https://vikasmeshram-portfolio.vercel.app]
