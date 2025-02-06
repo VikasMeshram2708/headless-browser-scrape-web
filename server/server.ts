@@ -29,7 +29,7 @@ app.get("/", async (req: Request, res: Response) => {
     );
 
     // Navigate to Airbnb
-    await page.goto("https://www.airbnb.co.in/", {
+    await page.goto("https://www.airbnb.co.in", {
       waitUntil: "networkidle2",
     });
 

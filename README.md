@@ -4,11 +4,7 @@
 
 - Features:
 
-  - Real-time competitor tracking.
-
-  - Price comparison and trend analysis.
-
-  - Notifications for changes in competitor strategies.
+  - Price comparison.
 
 - Potential: Helps businesses stay ahead of the competition.
 

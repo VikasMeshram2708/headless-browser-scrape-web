@@ -2,11 +2,14 @@ import PropertyCard from "@/components/listings/property-card";
 import { Suspense } from "react";
 
 export type Listing = {
+  id: string;
   title: string;
-  price: string;
   rating: string;
+  price: string;
   imageUrl: string;
   listingLink: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export const revalidate = 60;
@@ -33,7 +36,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen w-full">
       <div className="container mx-auto">
-        {/* <pre>{JSON.stringify(propertyData.meta.data, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(propertyData.meta.data[0], null, 2)}</pre> */}
         <div className="py-10">
           <Suspense fallback={<p>Processing...</p>}>
             <PropertyCard listings={propertyData.meta.data} />

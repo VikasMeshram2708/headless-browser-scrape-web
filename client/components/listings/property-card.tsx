@@ -28,15 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useComparisonStore } from "@/app/store";
+import { refineUrl } from "@/lib/refineImageUrl";
 
 type PropertyCardProps = {
   listings: Listing[];
 };
-
-function refineUrl(imageUrl: string) {
-  const slicedText = imageUrl.split("?")[0];
-  return slicedText;
-}
 
 function refinePrice(value: string) {
   const price = parseFloat(value).toFixed(2);
@@ -55,6 +52,11 @@ function refinePrice(value: string) {
 
 export default function PropertyCard({ listings }: PropertyCardProps) {
   const [filter, setFilter] = useState<string>("");
+
+  // Compare Fn
+  const compareFn = useComparisonStore(
+    (state) => state.addPropertyToComparison
+  );
 
   // Sort the listings based on the selected filter
   const sortedListings = [...listings].sort((a, b) => {
@@ -100,7 +102,14 @@ export default function PropertyCard({ listings }: PropertyCardProps) {
                     <DropdownMenuContent>
                       <DropdownMenuLabel>My Account</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Add Compare</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          compareFn(item.id);
+                          alert("Added to comparison list");
+                        }}
+                      >
+                        Add to compare list
+                      </DropdownMenuItem>
                       <DropdownMenuItem>User Sentiment</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
